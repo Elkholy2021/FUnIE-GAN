@@ -23,7 +23,7 @@ import torchvision.transforms as transforms
 from nets.commons import Weights_Normal, VGG19_PercepLoss
 from nets.funiegan import GeneratorFunieGAN, DiscriminatorFunieGAN
 from utils.data_utils import GetTrainingPairs, GetValImage
-
+import csv
 ## get configs and training options
 parser = argparse.ArgumentParser()
 parser.add_argument("--cfg_file", type=str, default="configs/train_euvp.yaml")
@@ -121,6 +121,11 @@ val_dataloader = DataLoader(
 
 
 ## Training pipeline
+file = open('log.csv', 'w')
+# 2.
+writer = csv.writer(file)
+data = ["Epoch" , "Batch" , "DLoss" , "GLoss" , "AdvLoss"]
+writer.writerow(data)
 for epoch in range(epoch, num_epochs):
     for i, batch in enumerate(dataloader):
         # Model inputs
@@ -162,6 +167,10 @@ for epoch in range(epoch, num_epochs):
                                 loss_D.item(), loss_G.item(), loss_GAN.item(),
                                )
             )
+            data = [epoch , i, loss_D.item(), loss_G.item(), loss_GAN.item()]
+            writer.writerow(data)
+
+
         ## If at sample interval save image
         batches_done = epoch * len(dataloader) + i
         if batches_done % val_interval == 0:
@@ -177,3 +186,4 @@ for epoch in range(epoch, num_epochs):
         torch.save(discriminator.state_dict(), "checkpoints/FunieGAN/%s/discriminator_%d.pth" % (dataset_name, epoch))
 
 
+file.close()

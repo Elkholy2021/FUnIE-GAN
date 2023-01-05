@@ -43,6 +43,9 @@ class GetTrainingPairs(Dataset):
         elif dataset_name=='UFO-120':
                 filesA = sorted(glob.glob(os.path.join(root, 'lrd') + "/*.*"))
                 filesB = sorted(glob.glob(os.path.join(root, 'hr') + "/*.*"))
+        elif dataset_name=='UIEB':
+                filesA = sorted(glob.glob(os.path.join(root, 'raw-890') + "/*.*"))
+                filesB = sorted(glob.glob(os.path.join(root, 'reference-890') + "/*.*"))
         return filesA, filesB 
 
 
@@ -72,5 +75,7 @@ class GetValImage(Dataset):
                 files += sorted(glob.glob(os.path.join(root, sd, 'validation') + "/*.*"))
         elif dataset_name=='UFO-120':
             files = sorted(glob.glob(os.path.join(root, 'lrd') + "/*.*"))
+        elif dataset_name=='UIEB':
+            files = sorted(glob.glob(os.path.join(root, 'challenging-60') + "/*.*"))
         return files
 
